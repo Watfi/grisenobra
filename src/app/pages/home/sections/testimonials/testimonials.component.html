@@ -1,0 +1,115 @@
+<section class="relative py-24 md:py-32 bg-gris-dark overflow-hidden">
+  <!-- Aurora background effect -->
+  <div class="aurora-bg absolute inset-0 opacity-30"></div>
+
+  <div class="relative z-10 max-w-6xl mx-auto px-6">
+    <!-- Header -->
+    <div class="text-center mb-16 md:mb-20">
+      <span class="text-gris-accent text-xs uppercase tracking-[0.4em]">testimonios</span>
+      <h2 class="font-serif text-4xl md:text-5xl text-white mt-4">Lo que dicen nuestros clientes</h2>
+    </div>
+
+    <!-- 3D Carousel (Desktop) -->
+    <div class="hidden md:block relative" style="perspective: 1200px;">
+      <div class="relative mx-auto" style="width: 380px; height: 320px; transform-style: preserve-3d;">
+        @for (t of testimonials; track t.id; let i = $index) {
+          <div
+            class="absolute inset-0 flex items-center justify-center transition-all duration-700 ease-out cursor-pointer"
+            [style.transform]="getTransform(i)"
+            [style.opacity]="getOpacity(i)"
+            [style.z-index]="getOpacity(i) === 1 ? 10 : 1"
+            (click)="goTo(i)"
+          >
+            <div
+              class="w-[360px] p-8 rounded-2xl transition-all duration-700 glass-card"
+              [class.active-card]="activeIndex() === i"
+              [style.transform]="'scale(' + getScale(i) + ')'"
+            >
+              <!-- Quote icon -->
+              <svg class="w-8 h-8 text-gris-accent/40 mb-4" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10H14.017zm-14.017 0v-7.391c0-5.704 3.731-9.57 8.983-10.609l.998 2.151C7.549 6.068 5.986 8.789 5.986 11h4v10H0z"/>
+              </svg>
+
+              <p class="text-white/85 text-base leading-relaxed mb-6 font-light italic">
+                "{{ t.quote }}"
+              </p>
+
+              <div class="border-t border-white/10 pt-4">
+                <p class="text-white font-medium text-sm">{{ t.clientName }}</p>
+                <p class="text-gris-accent text-xs uppercase tracking-wider mt-1">{{ t.projectName }}</p>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Navigation arrows -->
+      <button
+        (click)="prev()"
+        class="absolute left-0 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center text-white/50 hover:text-gris-accent transition-colors cursor-pointer"
+        aria-label="Anterior"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 19l-7-7 7-7"/>
+        </svg>
+      </button>
+      <button
+        (click)="next()"
+        class="absolute right-0 top-1/2 -translate-y-1/2 w-12 h-12 flex items-center justify-center text-white/50 hover:text-gris-accent transition-colors cursor-pointer"
+        aria-label="Siguiente"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5l7 7-7 7"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Mobile Carousel (single card swipe) -->
+    <div class="md:hidden">
+      <div class="relative overflow-hidden">
+        @for (t of testimonials; track t.id; let i = $index) {
+          @if (activeIndex() === i) {
+            <div class="p-6 rounded-2xl glass-card active-card animate-fade-in">
+              <svg class="w-7 h-7 text-gris-accent/40 mb-3" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10H14.017zm-14.017 0v-7.391c0-5.704 3.731-9.57 8.983-10.609l.998 2.151C7.549 6.068 5.986 8.789 5.986 11h4v10H0z"/>
+              </svg>
+              <p class="text-white/85 text-base leading-relaxed mb-5 font-light italic">
+                "{{ t.quote }}"
+              </p>
+              <div class="border-t border-white/10 pt-3">
+                <p class="text-white font-medium text-sm">{{ t.clientName }}</p>
+                <p class="text-gris-accent text-xs uppercase tracking-wider mt-1">{{ t.projectName }}</p>
+              </div>
+            </div>
+          }
+        }
+      </div>
+
+      <!-- Mobile nav dots + arrows -->
+      <div class="flex items-center justify-center gap-4 mt-6">
+        <button (click)="prev()" class="text-white/50 hover:text-gris-accent transition-colors cursor-pointer" aria-label="Anterior">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 19l-7-7 7-7"/>
+          </svg>
+        </button>
+        <div class="flex gap-2">
+          @for (t of testimonials; track t.id; let i = $index) {
+            <button
+              (click)="goTo(i)"
+              class="w-2 h-2 rounded-full transition-all duration-300 cursor-pointer"
+              [class.bg-gris-accent]="activeIndex() === i"
+              [class.w-6]="activeIndex() === i"
+              [class.bg-white/30]="activeIndex() !== i"
+              aria-label="Ir a testimonio {{ i + 1 }}"
+            ></button>
+          }
+        </div>
+        <button (click)="next()" class="text-white/50 hover:text-gris-accent transition-colors cursor-pointer" aria-label="Siguiente">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5l7 7-7 7"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>

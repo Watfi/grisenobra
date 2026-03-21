@@ -1,0 +1,43 @@
+<section id="filosofia" class="py-24 md:py-32 bg-white">
+  <div class="max-w-7xl mx-auto px-6 md:px-12">
+    <div
+      class="group relative flex cursor-pointer flex-col items-center gap-8 md:flex-row md:items-start md:gap-12 lg:gap-16"
+      (mouseenter)="isHovered.set(true)"
+      (mouseleave)="isHovered.set(false)">
+
+      <!-- Left: Text Block -->
+      <div class="relative z-10 flex w-full shrink-0 flex-col items-center text-center md:w-[320px] md:items-start md:text-left lg:w-[380px] lg:pt-4">
+
+        <!-- Title -->
+        <h2 class="relative">
+          <span class="block font-serif text-4xl font-normal tracking-tight text-gris-dark transition-all duration-700 sm:text-5xl lg:text-6xl"
+                [style.transform]="isHovered() ? 'translateY(-2px)' : 'translateY(0)'"
+                style="transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);">
+            Nuestra
+          </span>
+          <span class="block font-serif text-4xl font-normal tracking-tight text-gris-dark transition-all duration-700 sm:text-5xl lg:text-6xl"
+                [style.transform]="isHovered() ? 'translateX(12px)' : 'translateX(0)'"
+                style="transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);">
+            Filosofía
+          </span>
+        </h2>
+
+        <!-- Description -->
+        <p class="mt-6 max-w-[280px] text-sm leading-relaxed transition-all duration-700 md:mt-8 md:text-base lg:mt-10 lg:max-w-[300px]"
+           [style.color]="isHovered() ? '#1a1a1a99' : '#1a1a1a66'"
+           [style.transform]="isHovered() ? 'translateY(-4px)' : 'translateY(0)'"
+           style="transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);">
+          {{ philosophy()?.text || 'Creamos espacios que trascienden lo funcional. Cada proyecto es una conversación entre la arquitectura, la luz y quienes lo habitan.' }}
+        </p>
+
+        <!-- Decorative line -->
+        <div class="mt-8 w-12 h-px bg-gris-accent"></div>
+      </div>
+
+      <!-- Right: Polaroid Stack -->
+      <div class="relative w-full h-[350px] sm:h-[400px] md:flex-1 md:h-[500px] lg:h-[550px]">
+        <app-polaroid-stack [images]="polaroidImages" />
+      </div>
+    </div>
+  </div>
+</section>

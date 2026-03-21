@@ -1,0 +1,273 @@
+<app-nav />
+
+<!-- Hero header with cuarto.jpg background -->
+<section class="relative h-[60vh] md:h-[70vh] flex items-end overflow-hidden">
+  <!-- Background image -->
+  <div class="absolute inset-0">
+    <img src="/img/cuarto.jpg" alt="Gris en Obra portfolio"
+         class="w-full h-full object-cover" />
+    <div class="absolute inset-0 bg-linear-to-t from-black/70 via-black/30 to-black/20"></div>
+  </div>
+
+  <!-- Glassmorphism title card -->
+  <div class="relative z-10 m-8 md:m-14 p-8 md:p-10 rounded-sm"
+       style="background: rgba(255,255,255,0.08); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border: 1px solid rgba(255,255,255,0.12);">
+    <p class="text-xs uppercase tracking-[0.4em] text-gris-accent mb-3">portfolio</p>
+    <h1 class="font-serif text-4xl md:text-6xl text-white leading-tight">Todos los proyectos</h1>
+    <div class="mt-5 w-10 h-px bg-gris-accent"></div>
+  </div>
+</section>
+
+<!-- Loading -->
+@if (loading()) {
+  <div class="min-h-[50vh] flex items-center justify-center bg-white">
+    <p class="text-xs uppercase tracking-[0.4em] text-gris-dark/30 animate-pulse">Cargando proyectos...</p>
+  </div>
+}
+
+<!-- Projects grid -->
+@if (!loading() && projects().length > 0) {
+  <section class="relative py-16 px-4 md:px-6 overflow-hidden"
+           style="background: linear-gradient(155deg, #F5F5F0 0%, #EDE7DA 30%, #E6DDD0 55%, #EDE5D5 80%, #F2EDE5 100%);">
+
+    <!-- Warm glow blobs -->
+    <div class="absolute -top-32 -left-32 w-[500px] h-[500px] rounded-full pointer-events-none"
+         style="background: radial-gradient(circle, rgba(197,160,89,0.13) 0%, transparent 65%);"></div>
+    <div class="absolute -bottom-24 -right-24 w-[400px] h-[400px] rounded-full pointer-events-none"
+         style="background: radial-gradient(circle, rgba(197,160,89,0.10) 0%, transparent 65%);"></div>
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] pointer-events-none"
+         style="background: radial-gradient(ellipse, rgba(245,240,230,0.6) 0%, transparent 70%);"></div>
+
+    <!-- Top row: first 2 projects (6/12 each) -->
+    @if (projects().length >= 1) {
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        @for (project of projects().slice(0, 2); track project.id; let i = $index) {
+          <!-- Outer frame: lift + glow + border on hover -->
+          <div class="group relative cursor-pointer card-reveal
+                      border border-transparent
+                      transition-all duration-500
+                      hover:-translate-y-2
+                      hover:border-[rgba(197,160,89,0.35)]"
+               [style.animation-delay]="i * 130 + 'ms'"
+               [style.box-shadow]="'0 4px 24px rgba(26,26,26,0.07), 0 1px 4px rgba(26,26,26,0.05)'"
+               (click)="openProject(project)"
+               (mouseenter)="$any($event.currentTarget).style.boxShadow='0 16px 48px rgba(197,160,89,0.22), 0 4px 16px rgba(26,26,26,0.10)'"
+               (mouseleave)="$any($event.currentTarget).style.boxShadow='0 4px 24px rgba(26,26,26,0.07), 0 1px 4px rgba(26,26,26,0.05)'">
+
+            <!-- Decorative corner brackets (visible on hover) -->
+            <span class="absolute -top-px -left-px w-7 h-7 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-400 pointer-events-none"
+                  style="border-top: 1.5px solid #C5A059; border-left: 1.5px solid #C5A059;"></span>
+            <span class="absolute -top-px -right-px w-7 h-7 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-400 pointer-events-none"
+                  style="border-top: 1.5px solid #C5A059; border-right: 1.5px solid #C5A059;"></span>
+            <span class="absolute -bottom-px -left-px w-7 h-7 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-400 pointer-events-none"
+                  style="border-bottom: 1.5px solid #C5A059; border-left: 1.5px solid #C5A059;"></span>
+            <span class="absolute -bottom-px -right-px w-7 h-7 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-400 pointer-events-none"
+                  style="border-bottom: 1.5px solid #C5A059; border-right: 1.5px solid #C5A059;"></span>
+
+            <!-- Image container -->
+            <div class="relative overflow-hidden h-[55vw] md:h-[45vh]">
+              <img [src]="project.coverImage" [alt]="project.title"
+                   class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+              <div class="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-500"></div>
+              <div class="absolute bottom-6 left-6 right-6 p-5 rounded-sm text-white transition-all duration-400 group-hover:translate-y-[-4px]"
+                   style="background: rgba(15,15,15,0.50); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid rgba(255,255,255,0.10);">
+                <span class="text-[10px] uppercase tracking-widest mb-1.5 block text-gris-accent">{{ project.category }}</span>
+                <h3 class="font-serif text-2xl md:text-3xl leading-tight">{{ project.title }}</h3>
+                <p class="text-[11px] text-white/50 mt-2 uppercase tracking-widest">{{ project.location }} · {{ project.year }}</p>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- Remaining projects: 3 columns -->
+    @if (projects().length > 2) {
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        @for (project of projects().slice(2); track project.id; let i = $index) {
+          <div class="group relative cursor-pointer card-reveal
+                      border border-transparent
+                      transition-all duration-500
+                      hover:-translate-y-2
+                      hover:border-[rgba(197,160,89,0.35)]"
+               [style.animation-delay]="(2 + i) * 130 + 'ms'"
+               [style.box-shadow]="'0 4px 24px rgba(26,26,26,0.07), 0 1px 4px rgba(26,26,26,0.05)'"
+               (click)="openProject(project)"
+               (mouseenter)="$any($event.currentTarget).style.boxShadow='0 16px 48px rgba(197,160,89,0.22), 0 4px 16px rgba(26,26,26,0.10)'"
+               (mouseleave)="$any($event.currentTarget).style.boxShadow='0 4px 24px rgba(26,26,26,0.07), 0 1px 4px rgba(26,26,26,0.05)'">
+
+            <!-- Corner brackets -->
+            <span class="absolute -top-px -left-px w-5 h-5 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-400 pointer-events-none"
+                  style="border-top: 1.5px solid #C5A059; border-left: 1.5px solid #C5A059;"></span>
+            <span class="absolute -top-px -right-px w-5 h-5 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-400 pointer-events-none"
+                  style="border-top: 1.5px solid #C5A059; border-right: 1.5px solid #C5A059;"></span>
+            <span class="absolute -bottom-px -left-px w-5 h-5 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-400 pointer-events-none"
+                  style="border-bottom: 1.5px solid #C5A059; border-left: 1.5px solid #C5A059;"></span>
+            <span class="absolute -bottom-px -right-px w-5 h-5 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-400 pointer-events-none"
+                  style="border-bottom: 1.5px solid #C5A059; border-right: 1.5px solid #C5A059;"></span>
+
+            <!-- Image container -->
+            <div class="relative overflow-hidden h-[60vw] md:h-[40vh]">
+              <img [src]="project.coverImage" [alt]="project.title"
+                   class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+              <div class="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-500"></div>
+              <div class="absolute bottom-4 left-4 right-4 p-4 rounded-sm text-white transition-all duration-400 group-hover:translate-y-[-3px]"
+                   style="background: rgba(15,15,15,0.50); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid rgba(255,255,255,0.10);">
+                <span class="text-[10px] uppercase tracking-widest mb-1 block text-gris-accent">{{ project.category }}</span>
+                <h3 class="font-serif text-xl leading-tight">{{ project.title }}</h3>
+                <p class="text-[10px] text-white/50 mt-1.5 uppercase tracking-widest">{{ project.location }}</p>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+  </section>
+}
+
+<!-- Empty state -->
+@if (!loading() && projects().length === 0) {
+  <div class="min-h-[50vh] flex flex-col items-center justify-center bg-white gap-6">
+    <p class="text-xs uppercase tracking-[0.4em] text-gris-dark/30">No hay proyectos aún</p>
+    <a routerLink="/" class="text-xs uppercase tracking-widest text-gris-accent hover:underline">← Volver al inicio</a>
+  </div>
+}
+
+<!-- Footer link -->
+@if (!loading()) {
+  <div class="py-16 px-6 flex justify-between items-center" style="background: linear-gradient(90deg, #EDE7DA 0%, #E6DDD0 50%, #EDE5D5 100%);">
+    <a routerLink="/" class="text-xs uppercase tracking-[0.3em] text-gris-dark/40 hover:text-gris-accent transition-colors">
+      ← Volver al inicio
+    </a>
+    <p class="text-[10px] uppercase tracking-widest text-gris-dark/20">Gris en Obra · Medellín</p>
+  </div>
+}
+
+<!-- Fullscreen modal -->
+@if (selectedProject()) {
+  <div class="fixed inset-0 z-50 flex flex-col" style="background: #0f0f0f;" (click)="closeModal()">
+
+    <!-- Top bar -->
+    <div class="flex items-center justify-between px-6 md:px-10 py-5 z-20" (click)="$event.stopPropagation()">
+      <div>
+        <h3 class="font-serif text-2xl md:text-3xl text-white">{{ selectedProject()!.title }}</h3>
+        <p class="text-[10px] uppercase tracking-widest text-white/40 mt-1">{{ selectedProject()!.category }} · {{ selectedProject()!.location }} · {{ selectedProject()!.year }}</p>
+      </div>
+      <div class="flex items-center gap-4">
+        <!-- View mode toggle (only if spaces exist) -->
+        @if (selectedProject()!.spaces?.length) {
+          <div class="flex border border-white/20 rounded-sm overflow-hidden" (click)="$event.stopPropagation()">
+            <button (click)="viewMode.set('spaces')"
+                    class="px-4 py-2 text-[10px] uppercase tracking-widest transition-colors"
+                    [class.bg-white/15]="viewMode() === 'spaces'"
+                    [class.text-white]="viewMode() === 'spaces'"
+                    [class.text-white/40]="viewMode() !== 'spaces'">
+              antes / después
+            </button>
+            <button (click)="viewMode.set('gallery')"
+                    class="px-4 py-2 text-[10px] uppercase tracking-widest transition-colors"
+                    [class.bg-white/15]="viewMode() === 'gallery'"
+                    [class.text-white]="viewMode() === 'gallery'"
+                    [class.text-white/40]="viewMode() !== 'gallery'">
+              galería
+            </button>
+          </div>
+        }
+        <button class="p-2 text-white/60 hover:text-white transition-colors" (click)="closeModal()">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Content area -->
+    <div class="flex-1 relative overflow-hidden" (click)="$event.stopPropagation()">
+
+      <!-- SPACES VIEW: Image comparison carousel -->
+      @if (viewMode() === 'spaces' && selectedProject()!.spaces?.length) {
+        <div class="w-full h-full flex flex-col">
+          <!-- Space name tabs -->
+          <div class="flex justify-center gap-2 px-4 pb-4">
+            @for (space of selectedProject()!.spaces; track $index) {
+              <button (click)="currentSpaceIndex.set($index)"
+                      class="px-5 py-2 text-xs uppercase tracking-widest rounded-sm transition-all duration-300"
+                      [class.bg-gris-accent]="currentSpaceIndex() === $index"
+                      [class.text-white]="currentSpaceIndex() === $index"
+                      [class.text-white/40]="currentSpaceIndex() !== $index"
+                      [class.bg-white/5]="currentSpaceIndex() !== $index">
+                {{ space.name }}
+              </button>
+            }
+          </div>
+
+          <!-- Image comparison slider -->
+          <div class="flex-1 relative mx-4 md:mx-16 mb-4 rounded-sm overflow-hidden">
+            @for (space of selectedProject()!.spaces; track $index) {
+              @if (currentSpaceIndex() === $index) {
+                <app-image-comparison
+                  class="block w-full h-full"
+                  [beforeImage]="space.beforeImage"
+                  [afterImage]="space.afterImage"
+                  [spaceName]="space.name" />
+              }
+            }
+          </div>
+
+          <!-- Prev/Next arrows -->
+          @if ((selectedProject()!.spaces ?? []).length > 1) {
+            <button (click)="prevSpace($event)"
+                    class="absolute left-2 md:left-6 top-1/2 -translate-y-1/2 z-20 p-3 text-white/40 hover:text-white transition-colors">
+              <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 19l-7-7 7-7"/>
+              </svg>
+            </button>
+            <button (click)="nextSpace($event)"
+                    class="absolute right-2 md:right-6 top-1/2 -translate-y-1/2 z-20 p-3 text-white/40 hover:text-white transition-colors">
+              <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5l7 7-7 7"/>
+              </svg>
+            </button>
+          }
+        </div>
+      }
+
+      <!-- GALLERY VIEW: Regular image carousel -->
+      @if (viewMode() === 'gallery') {
+        <div class="w-full h-full relative">
+          <img [src]="modalImages()[currentImageIndex()]" [alt]="selectedProject()!.title"
+               class="w-full h-full object-contain" />
+
+          @if (modalImages().length > 1) {
+            <button (click)="prevImage($event)"
+                    class="absolute left-4 top-1/2 -translate-y-1/2 z-20 p-3 text-white/40 hover:text-white transition-colors">
+              <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 19l-7-7 7-7"/>
+              </svg>
+            </button>
+            <button (click)="nextImage($event)"
+                    class="absolute right-4 top-1/2 -translate-y-1/2 z-20 p-3 text-white/40 hover:text-white transition-colors">
+              <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5l7 7-7 7"/>
+              </svg>
+            </button>
+            <div class="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex gap-2">
+              @for (img of modalImages(); track $index) {
+                <button (click)="currentImageIndex.set($index)"
+                        class="w-1.5 h-1.5 rounded-full transition-all duration-300"
+                        [class.bg-white]="currentImageIndex() === $index"
+                        [class.bg-white/30]="currentImageIndex() !== $index"></button>
+              }
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- Bottom info bar -->
+    <div class="px-6 md:px-10 py-4 z-20 border-t border-white/10" (click)="$event.stopPropagation()">
+      <p class="text-sm text-white/60 leading-relaxed line-clamp-2">{{ selectedProject()!.description }}</p>
+    </div>
+  </div>
+}

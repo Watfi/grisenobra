@@ -1,0 +1,227 @@
+<!-- List view -->
+@if (mode() === 'list') {
+  <div>
+    <div class="flex justify-between items-center mb-8">
+      <h1 class="font-serif text-2xl text-gris-dark">Proyectos</h1>
+      <button
+        (click)="startCreate()"
+        class="bg-gris-dark text-white px-5 py-2.5 text-sm lowercase tracking-widest hover:bg-gris-accent transition-colors"
+      >
+        + nuevo proyecto
+      </button>
+    </div>
+
+    @if (error()) {
+      <div class="bg-red-50 border border-red-200 text-red-700 text-sm p-4 mb-6 rounded">{{ error() }}</div>
+    }
+    @if (success()) {
+      <div class="bg-green-50 border border-green-200 text-green-700 text-sm p-4 mb-6 rounded">{{ success() }}</div>
+    }
+
+    @if (loading()) {
+      <p class="text-gris-dark/40 text-sm lowercase tracking-widest">cargando...</p>
+    } @else if (projects().length === 0) {
+      <p class="text-gris-dark/40 text-sm">No hay proyectos. Crea el primero.</p>
+    } @else {
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        @for (project of projects(); track project.id) {
+          <div class="bg-white rounded overflow-hidden shadow-sm">
+            @if (project.coverImage) {
+              <img [src]="project.coverImage" [alt]="project.title" class="w-full aspect-video object-cover" />
+            }
+            <div class="p-4">
+              <div class="mb-1">
+                <h3 class="font-medium text-gris-dark text-sm">{{ project.title }}</h3>
+              </div>
+              <p class="text-xs text-gris-dark/50 mb-1">{{ project.category }}</p>
+              <p class="text-xs text-gris-dark/40">{{ project.location }} · {{ project.year }}</p>
+
+              <div class="flex gap-2 mt-4">
+                <button
+                  (click)="startEdit(project)"
+                  class="flex-1 border border-gris-dark/20 text-xs py-2 lowercase tracking-widest hover:border-gris-accent hover:text-gris-accent transition-colors"
+                >
+                  editar
+                </button>
+                <button
+                  (click)="deleteProject(project)"
+                  class="flex-1 border border-red-200 text-red-400 text-xs py-2 lowercase tracking-widest hover:bg-red-50 transition-colors"
+                >
+                  eliminar
+                </button>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+}
+
+<!-- Create / Edit form -->
+@if (mode() === 'create' || mode() === 'edit') {
+  <div class="max-w-2xl">
+    <div class="flex justify-between items-center mb-8">
+      <h1 class="font-serif text-2xl text-gris-dark">
+        {{ mode() === 'create' ? 'Nuevo proyecto' : 'Editar proyecto' }}
+      </h1>
+      <button (click)="cancel()" class="text-sm text-gris-dark/40 hover:text-gris-dark lowercase tracking-widest">
+        ← volver
+      </button>
+    </div>
+
+    @if (error()) {
+      <div class="bg-red-50 border border-red-200 text-red-700 text-sm p-4 mb-6">{{ error() }}</div>
+    }
+
+    <div class="space-y-5">
+      <!-- Title -->
+      <div>
+        <label class="block text-xs lowercase tracking-widest text-gris-dark/60 mb-1">título *</label>
+        <input type="text" [value]="form().title"
+          (input)="onTitleChange($any($event.target).value)"
+          class="w-full border border-gris-dark/20 px-4 py-2.5 text-sm focus:outline-none focus:border-gris-accent"
+          placeholder="Casa Terracota" />
+      </div>
+
+      <!-- Slug -->
+      <div>
+        <label class="block text-xs lowercase tracking-widest text-gris-dark/60 mb-1">slug (URL)</label>
+        <input type="text" [value]="form().slug"
+          (input)="updateForm('slug', $any($event.target).value)"
+          class="w-full border border-gris-dark/20 px-4 py-2.5 text-sm focus:outline-none focus:border-gris-accent text-gris-dark/60"
+          placeholder="casa-terracota" />
+      </div>
+
+      <!-- Category + Year -->
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-xs lowercase tracking-widest text-gris-dark/60 mb-1">categoría</label>
+          <input type="text" [value]="form().category"
+            (input)="updateForm('category', $any($event.target).value)"
+            class="w-full border border-gris-dark/20 px-4 py-2.5 text-sm focus:outline-none focus:border-gris-accent"
+            placeholder="Interiorismo residencial" />
+        </div>
+        <div>
+          <label class="block text-xs lowercase tracking-widest text-gris-dark/60 mb-1">año</label>
+          <input type="number" [value]="form().year"
+            (input)="updateForm('year', +$any($event.target).value)"
+            class="w-full border border-gris-dark/20 px-4 py-2.5 text-sm focus:outline-none focus:border-gris-accent"
+            placeholder="2024" />
+        </div>
+      </div>
+
+      <!-- Location -->
+      <div>
+        <label class="block text-xs lowercase tracking-widest text-gris-dark/60 mb-1">ubicación</label>
+        <input type="text" [value]="form().location"
+          (input)="updateForm('location', $any($event.target).value)"
+          class="w-full border border-gris-dark/20 px-4 py-2.5 text-sm focus:outline-none focus:border-gris-accent"
+          placeholder="Medellín, Antioquia" />
+      </div>
+
+      <!-- Description -->
+      <div>
+        <label class="block text-xs lowercase tracking-widest text-gris-dark/60 mb-1">descripción</label>
+        <textarea [value]="form().description"
+          (input)="updateForm('description', $any($event.target).value)"
+          rows="4"
+          class="w-full border border-gris-dark/20 px-4 py-2.5 text-sm focus:outline-none focus:border-gris-accent resize-none"
+          placeholder="Describe el proyecto..."></textarea>
+      </div>
+
+      <!-- Cover image upload -->
+      <div>
+        <label class="block text-xs lowercase tracking-widest text-gris-dark/60 mb-2">imagen de portada</label>
+        @if (form().coverImage) {
+          <img [src]="form().coverImage" alt="portada" class="w-48 h-32 object-cover mb-3" />
+        }
+        <label class="inline-block cursor-pointer border border-dashed border-gris-dark/30 px-4 py-2 text-xs lowercase tracking-widest text-gris-dark/50 hover:border-gris-accent hover:text-gris-accent transition-colors">
+          {{ uploading() ? 'subiendo...' : 'subir portada' }}
+          <input type="file" accept="image/*" class="hidden" (change)="onCoverUpload($event)" />
+        </label>
+      </div>
+
+      <!-- Gallery images -->
+      <div>
+        <label class="block text-xs lowercase tracking-widest text-gris-dark/60 mb-2">galería de imágenes</label>
+        @if (form().images.length > 0) {
+          <div class="flex flex-wrap gap-2 mb-3">
+            @for (img of form().images; track img; let i = $index) {
+              <div class="relative">
+                <img [src]="img" alt="imagen" class="w-20 h-20 object-cover" />
+                <button
+                  (click)="removeImage(i)"
+                  class="absolute -top-1.5 -right-1.5 bg-red-500 text-white w-5 h-5 text-xs flex items-center justify-center rounded-full"
+                >×</button>
+              </div>
+            }
+          </div>
+        }
+        <label class="inline-block cursor-pointer border border-dashed border-gris-dark/30 px-4 py-2 text-xs lowercase tracking-widest text-gris-dark/50 hover:border-gris-accent hover:text-gris-accent transition-colors">
+          {{ uploading() ? 'subiendo...' : '+ agregar imágenes' }}
+          <input type="file" accept="image/*" multiple class="hidden" (change)="onImagesUpload($event)" />
+        </label>
+      </div>
+
+      <!-- Spaces (antes/después) -->
+      <div>
+        <label class="block text-xs lowercase tracking-widest text-gris-dark/60 mb-2">espacios (antes / después)</label>
+        <p class="text-[11px] text-gris-dark/40 mb-3">Agrega espacios del proyecto con fotos de antes y después para el comparador interactivo.</p>
+
+        @for (space of form().spaces; track $index; let i = $index) {
+          <div class="border border-gris-dark/15 p-4 mb-3 rounded-sm">
+            <div class="flex justify-between items-center mb-3">
+              <input type="text" [value]="space.name"
+                (input)="updateSpaceName(i, $any($event.target).value)"
+                class="border border-gris-dark/20 px-3 py-1.5 text-sm focus:outline-none focus:border-gris-accent w-48"
+                placeholder="Ej: Lobby, Cocina, Baño" />
+              <button (click)="removeSpace(i)"
+                class="text-red-400 text-xs hover:text-red-600 lowercase tracking-widest">eliminar</button>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+              <!-- Before -->
+              <div>
+                <span class="text-[10px] uppercase tracking-widest text-gris-dark/40 block mb-1">antes</span>
+                @if (space.beforeImage) {
+                  <img [src]="space.beforeImage" alt="antes" class="w-full h-24 object-cover mb-2 rounded-sm" />
+                }
+                <label class="inline-block cursor-pointer border border-dashed border-gris-dark/30 px-3 py-1.5 text-[11px] lowercase tracking-widest text-gris-dark/50 hover:border-gris-accent hover:text-gris-accent transition-colors">
+                  {{ uploading() ? 'subiendo...' : 'subir antes' }}
+                  <input type="file" accept="image/*" class="hidden" (change)="onSpaceImageUpload($event, i, 'beforeImage')" />
+                </label>
+              </div>
+              <!-- After -->
+              <div>
+                <span class="text-[10px] uppercase tracking-widest text-gris-dark/40 block mb-1">después</span>
+                @if (space.afterImage) {
+                  <img [src]="space.afterImage" alt="después" class="w-full h-24 object-cover mb-2 rounded-sm" />
+                }
+                <label class="inline-block cursor-pointer border border-dashed border-gris-dark/30 px-3 py-1.5 text-[11px] lowercase tracking-widest text-gris-dark/50 hover:border-gris-accent hover:text-gris-accent transition-colors">
+                  {{ uploading() ? 'subiendo...' : 'subir después' }}
+                  <input type="file" accept="image/*" class="hidden" (change)="onSpaceImageUpload($event, i, 'afterImage')" />
+                </label>
+              </div>
+            </div>
+          </div>
+        }
+
+        <button (click)="addSpace()"
+          class="border border-dashed border-gris-dark/30 px-4 py-2 text-xs lowercase tracking-widest text-gris-dark/50 hover:border-gris-accent hover:text-gris-accent transition-colors w-full">
+          + agregar espacio
+        </button>
+      </div>
+
+      <!-- Save button -->
+      <div class="pt-4">
+        <button
+          (click)="save()"
+          [disabled]="loading() || uploading()"
+          class="bg-gris-dark text-white px-8 py-3 text-sm lowercase tracking-widest hover:bg-gris-accent transition-colors disabled:opacity-50"
+        >
+          {{ loading() ? 'guardando...' : 'guardar proyecto' }}
+        </button>
+      </div>
+    </div>
+  </div>
+}

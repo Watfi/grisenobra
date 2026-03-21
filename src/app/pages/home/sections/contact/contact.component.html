@@ -1,0 +1,101 @@
+<footer id="contacto" class="bg-gris-warm pt-32 pb-12 px-6">
+  <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-24 border-b border-gris-dark/10 pb-24">
+
+    <!-- Left: contact info -->
+    <div>
+      <h2 class="font-serif text-5xl md:text-7xl mb-12 italic leading-tight">
+        Hablemos de <br/>tu proyecto.
+      </h2>
+      <div class="space-y-3 text-lg text-gris-dark/70">
+        @if (contact()?.email) {
+          <p>{{ contact()!.email }}</p>
+        }
+        @if (contact()?.phone) {
+          <p>{{ contact()!.phone }}</p>
+        }
+        @if (contact()?.address) {
+          <p>{{ contact()!.address }}</p>
+        }
+        @if (!contact()?.email) {
+          <p>hola&#64;grisenobra.com</p>
+          <p>Medellín, Colombia</p>
+        }
+      </div>
+    </div>
+
+    <!-- Right: contact form -->
+    <div class="flex flex-col justify-end">
+
+      <!-- Success state -->
+      @if (sent()) {
+        <div class="py-12 flex flex-col gap-4">
+          <p class="text-xs uppercase tracking-[0.4em] text-gris-accent">Mensaje enviado</p>
+          <p class="font-serif text-3xl text-gris-dark leading-snug">
+            Gracias, pronto <br/>estaremos en contacto.
+          </p>
+          <button (click)="sent.set(false)"
+                  class="mt-6 text-xs uppercase tracking-widest text-gris-dark/40 hover:text-gris-accent transition-colors text-left">
+            Enviar otro mensaje →
+          </button>
+        </div>
+      } @else {
+        <form (ngSubmit)="submit()" class="space-y-6">
+          <input
+            type="text"
+            placeholder="NOMBRE"
+            [ngModel]="name()"
+            (ngModelChange)="name.set($event)"
+            name="name"
+            class="w-full bg-transparent border-0 border-b border-gris-dark/30 py-4 focus:outline-none focus:border-gris-accent transition-colors placeholder:text-gris-dark/40 placeholder:text-xs placeholder:tracking-widest"
+          />
+          <input
+            type="email"
+            placeholder="EMAIL"
+            [ngModel]="email()"
+            (ngModelChange)="email.set($event)"
+            name="email"
+            class="w-full bg-transparent border-0 border-b border-gris-dark/30 py-4 focus:outline-none focus:border-gris-accent transition-colors placeholder:text-gris-dark/40 placeholder:text-xs placeholder:tracking-widest"
+          />
+          <textarea
+            placeholder="MENSAJE"
+            rows="3"
+            [ngModel]="message()"
+            (ngModelChange)="message.set($event)"
+            name="message"
+            class="w-full bg-transparent border-0 border-b border-gris-dark/30 py-4 focus:outline-none focus:border-gris-accent transition-colors placeholder:text-gris-dark/40 placeholder:text-xs placeholder:tracking-widest resize-none"
+          ></textarea>
+
+          @if (formError()) {
+            <p class="text-xs text-red-500 tracking-widest uppercase">{{ formError() }}</p>
+          }
+
+          <button
+            type="submit"
+            [disabled]="sending()"
+            class="bg-gris-dark text-white px-12 py-4 text-xs uppercase tracking-[0.3em] hover:bg-gris-accent transition-colors disabled:opacity-50"
+          >
+            {{ sending() ? 'Enviando...' : 'Enviar' }}
+          </button>
+        </form>
+      }
+
+    </div>
+
+  </div>
+
+  <!-- Footer bottom -->
+  <div class="max-w-6xl mx-auto pt-12 flex flex-col md:flex-row justify-between items-center text-[10px] uppercase tracking-widest text-gris-dark/40">
+    <p>© {{ currentYear }} Gris en Obra. Todos los derechos reservados.</p>
+    <div class="flex space-x-8 mt-4 md:mt-0">
+      @if (contact()?.instagram) {
+        <a [href]="'https://instagram.com/' + contact()!.instagram!.replace('@','')"
+           target="_blank" rel="noopener"
+           class="hover:text-gris-accent transition-colors">Instagram</a>
+      } @else {
+        <a href="#" class="hover:text-gris-accent transition-colors">Instagram</a>
+      }
+      <a href="#" class="hover:text-gris-accent transition-colors">Pinterest</a>
+      <a href="#" class="hover:text-gris-accent transition-colors">LinkedIn</a>
+    </div>
+  </div>
+</footer>

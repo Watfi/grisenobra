@@ -1,0 +1,34 @@
+<header class="relative h-screen flex items-center justify-center overflow-hidden">
+  <!-- Background image -->
+  <div class="absolute inset-0 z-[1]">
+    <img src="/img/hero_image.png" [alt]="hero()?.title || 'Gris en Obra'" class="w-full h-full object-cover"
+      fetchpriority="high" />
+    <!-- Subtle dark overlay for text readability -->
+    <div class="absolute inset-0 bg-black/30"></div>
+  </div>
+
+  <!-- Content with liquid glass frame -->
+  <div class="relative z-10 text-center px-4">
+    <div class="inline-block px-8 md:px-10 py-8 md:py-10 rounded-2xl"
+      style="background: rgba(255,255,255,0.08); backdrop-filter: blur(20px) saturate(140%); -webkit-backdrop-filter: blur(20px) saturate(140%); border: 1px solid rgba(255,255,255,0.15); box-shadow: 0 8px 32px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.1);">
+      <h1 class="text-white font-serif text-4xl md:text-6xl mb-5 leading-tight drop-shadow-md capitalize">
+        {{ hero()?.title || 'Diseño de Interiores' }}
+      </h1>
+      <div class="w-12 h-px mx-auto mb-5" style="background: rgba(197,160,89,0.6);"></div>
+      <p class="text-white/90 uppercase tracking-[0.3em] text-sm md:text-base">
+        {{ hero()?.subtitle || 'Arquitectos en Antioquia | Minimalismo Cálido' }}
+      </p>
+    </div>
+  </div>
+
+  <!-- Bottom gradient -->
+  <div class="absolute bottom-0 left-0 w-full h-32 bg-linear-to-t from-gris-warm to-transparent z-10"></div>
+
+  <!-- Scroll indicator -->
+  <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center gap-2 text-white/50">
+    <span class="text-xs lowercase tracking-widest">l</span>
+    <svg class="w-4 h-4 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 9l-7 7-7-7" />
+    </svg>
+  </div>
+</header>

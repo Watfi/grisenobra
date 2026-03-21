@@ -1,0 +1,228 @@
+<div class="min-h-screen bg-gris-dark flex relative overflow-hidden">
+
+  <!-- Left: Lamp effect (faithful to Aceternity original) -->
+  <div class="hidden lg:flex lg:w-1/2 relative flex-col items-center justify-center overflow-hidden w-full z-0" style="background: #0f172a;">
+
+    <!-- Lamp scalable area -->
+    <div class="relative flex w-full flex-1 items-center justify-center isolate z-0" style="transform: scaleY(1.25);">
+      <!-- Left cone -->
+      <div class="lamp-cone-l lamp-anim-expand">
+        <div class="absolute w-full left-0 bottom-0 h-40 z-20" style="background: #0f172a; mask-image: linear-gradient(to top, white, transparent); -webkit-mask-image: linear-gradient(to top, white, transparent);"></div>
+        <div class="absolute w-40 h-full left-0 bottom-0 z-20" style="background: #0f172a; mask-image: linear-gradient(to right, white, transparent); -webkit-mask-image: linear-gradient(to right, white, transparent);"></div>
+      </div>
+      <!-- Right cone -->
+      <div class="lamp-cone-r lamp-anim-expand">
+        <div class="absolute w-40 h-full right-0 bottom-0 z-20" style="background: #0f172a; mask-image: linear-gradient(to left, white, transparent); -webkit-mask-image: linear-gradient(to left, white, transparent);"></div>
+        <div class="absolute w-full right-0 bottom-0 h-40 z-20" style="background: #0f172a; mask-image: linear-gradient(to top, white, transparent); -webkit-mask-image: linear-gradient(to top, white, transparent);"></div>
+      </div>
+      <!-- Blur fill below -->
+      <div class="absolute top-1/2 h-48 w-full translate-y-12" style="transform: translateY(0.75rem) scaleX(1.5); background: #0f172a; filter: blur(24px);"></div>
+      <!-- Subtle backdrop blur -->
+      <div class="absolute top-1/2 z-50 h-48 w-full bg-transparent opacity-10" style="backdrop-filter: blur(12px);"></div>
+      <!-- Large ambient glow -->
+      <div class="absolute inset-auto z-50 h-36 w-[28rem] rounded-full opacity-50" style="background: #c5a059; filter: blur(48px); transform: translateY(-50%);"></div>
+      <!-- Focused glow -->
+      <div class="lamp-glow-sm lamp-anim-glow-sm"></div>
+      <!-- Light bar -->
+      <div class="lamp-bar lamp-anim-expand"></div>
+      <!-- Top mask -->
+      <div class="absolute inset-auto z-40 h-44 w-full" style="background: #0f172a; transform: translateY(-12.5rem);"></div>
+    </div>
+
+    <!-- Content pulled UP into lamp area -->
+    <div class="relative z-50 flex flex-col items-center px-5" style="transform: translateY(-20rem);">
+      <div class="flex flex-col items-center gap-6 login-fade-in">
+        <div class="flex items-center gap-3 font-sans font-light lowercase tracking-[0.15em] select-none" style="color: #d5d4cf;">
+          <span class="text-6xl xl:text-7xl">gris</span>
+          <span class="inline-flex flex-col items-center justify-center tracking-normal text-2xl xl:text-3xl" style="line-height: 0;">
+            <span style="padding-bottom: 0.2em; line-height: 1;">e</span>
+            <span class="w-full h-[1.5px] block" style="background: #d5d4cf;"></span>
+            <span style="padding-top: 0.2em; line-height: 1;">n</span>
+          </span>
+          <span class="text-6xl xl:text-7xl">obra</span>
+        </div>
+        <p class="text-white/20 text-xs uppercase tracking-[0.4em]">arquitectura & interiorismo</p>
+      </div>
+    </div>
+
+    <!-- Decorative bottom -->
+    <div class="absolute bottom-12 left-12 z-50 login-fade-in" style="animation-delay: 0.4s;">
+      <div class="w-16 h-px bg-white/10 mb-3"></div>
+      <p class="text-white/15 text-[10px] uppercase tracking-[0.3em]">Medellin, Colombia</p>
+    </div>
+  </div>
+
+  <!-- Right: Login form -->
+  <div class="w-full lg:w-1/2 flex items-center justify-center px-6 py-12 relative">
+    <!-- Subtle glow from left edge -->
+    <div class="absolute left-0 top-0 bottom-0 w-32 hidden lg:block"
+      style="background: linear-gradient(90deg, rgba(197,160,89,0.03) 0%, transparent 100%);"></div>
+
+    <div class="w-full max-w-sm relative z-10">
+
+      <!-- Mobile logo -->
+      <div class="lg:hidden mb-12 text-center login-fade-in">
+        <div class="flex items-center justify-center gap-2 font-sans font-light lowercase tracking-[0.15em]" style="color: #d5d4cf;">
+          <span class="text-4xl">gris</span>
+          <span class="inline-flex flex-col items-center justify-center tracking-normal text-lg" style="line-height: 0;">
+            <span style="padding-bottom: 0.2em; line-height: 1;">e</span>
+            <span class="w-full h-px block" style="background: #d5d4cf;"></span>
+            <span style="padding-top: 0.2em; line-height: 1;">n</span>
+          </span>
+          <span class="text-4xl">obra</span>
+        </div>
+      </div>
+
+      <!-- Form card -->
+      <div class="login-card login-fade-in" style="animation-delay: 0.2s;">
+        <div class="p-8 sm:p-10">
+
+          <!-- Header -->
+          <div class="mb-8">
+            <h2 class="text-white text-xl font-light tracking-wide">Bienvenido</h2>
+            <p class="text-white/30 text-sm mt-1">Panel de administracion</p>
+          </div>
+
+          <!-- ── LOGIN ── -->
+          @if (mode() === 'login') {
+            <form (ngSubmit)="onSubmit()" #form="ngForm" class="space-y-5">
+              <div class="space-y-1">
+                <label class="block text-[11px] uppercase tracking-[0.2em] text-white/40">email</label>
+                <div class="relative">
+                  <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                  </svg>
+                  <input type="email" [(ngModel)]="email" name="email" required autocomplete="email"
+                    class="login-input pl-10"
+                    placeholder="admin@grisenobra.com" />
+                </div>
+              </div>
+
+              <div class="space-y-1">
+                <label class="block text-[11px] uppercase tracking-[0.2em] text-white/40">contrasena</label>
+                <div class="relative">
+                  <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                  </svg>
+                  <input type="password" [(ngModel)]="password" name="password" required autocomplete="current-password"
+                    class="login-input pl-10"
+                    placeholder="••••••••" />
+                </div>
+              </div>
+
+              @if (error()) {
+                <div class="flex items-center gap-2 text-red-400/80 text-xs bg-red-400/5 rounded-lg px-3 py-2 border border-red-400/10">
+                  <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+                  </svg>
+                  <span>{{ error() }}</span>
+                </div>
+              }
+
+              <button type="submit" [disabled]="loading()" class="login-btn group">
+                <span class="relative z-10 flex items-center justify-center gap-2">
+                  @if (loading()) {
+                    <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"></circle>
+                      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                    </svg>
+                    <span>ingresando...</span>
+                  } @else {
+                    <span>ingresar</span>
+                    <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                    </svg>
+                  }
+                </span>
+              </button>
+
+              <div class="text-center pt-1">
+                <button type="button" (click)="switchMode('reset')"
+                  class="text-xs text-white/25 hover:text-gris-accent transition-colors duration-300 lowercase tracking-widest cursor-pointer">
+                  ¿olvidaste tu contrasena?
+                </button>
+              </div>
+            </form>
+          }
+
+          <!-- ── RECUPERAR ── -->
+          @if (mode() === 'reset') {
+            <div class="space-y-5">
+
+              @if (!resetSent()) {
+                <p class="text-white/35 text-sm leading-relaxed">
+                  Ingresa tu email y te enviaremos un enlace para restablecer tu contrasena.
+                </p>
+                <div class="space-y-1">
+                  <label class="block text-[11px] uppercase tracking-[0.2em] text-white/40">email</label>
+                  <div class="relative">
+                    <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                    </svg>
+                    <input type="email" [(ngModel)]="email" name="resetEmail"
+                      class="login-input pl-10"
+                      placeholder="admin@grisenobra.com" />
+                  </div>
+                </div>
+
+                @if (error()) {
+                  <div class="flex items-center gap-2 text-red-400/80 text-xs bg-red-400/5 rounded-lg px-3 py-2 border border-red-400/10">
+                    <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+                    </svg>
+                    <span>{{ error() }}</span>
+                  </div>
+                }
+
+                <button (click)="onReset()" [disabled]="loading()" class="login-btn group">
+                  <span class="relative z-10 flex items-center justify-center gap-2">
+                    @if (loading()) {
+                      <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                      </svg>
+                      <span>enviando...</span>
+                    } @else {
+                      <span>enviar enlace</span>
+                    }
+                  </span>
+                </button>
+
+              } @else {
+                <div class="text-center py-6 space-y-4">
+                  <div class="w-12 h-12 mx-auto rounded-full bg-gris-accent/10 flex items-center justify-center">
+                    <svg class="w-6 h-6 text-gris-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 13l4 4L19 7"/>
+                    </svg>
+                  </div>
+                  <p class="text-gris-accent text-xs uppercase tracking-[0.3em]">correo enviado</p>
+                  <p class="text-white/70 text-lg font-light">
+                    Revisa tu bandeja de entrada.
+                  </p>
+                  <p class="text-white/25 text-xs leading-relaxed">
+                    Si no aparece en unos minutos, revisa la carpeta de spam.
+                  </p>
+                </div>
+              }
+
+              <div class="text-center pt-1">
+                <button type="button" (click)="switchMode('login')"
+                  class="text-xs text-white/25 hover:text-gris-accent transition-colors duration-300 lowercase tracking-widest cursor-pointer">
+                  ← volver al inicio de sesion
+                </button>
+              </div>
+
+            </div>
+          }
+
+        </div>
+      </div>
+
+      <!-- Bottom text -->
+      <p class="text-center text-white/10 text-[10px] uppercase tracking-[0.3em] mt-8 login-fade-in" style="animation-delay: 0.5s;">
+        © {{ currentYear }} gris en obra
+      </p>
+    </div>
+  </div>
+
+</div>

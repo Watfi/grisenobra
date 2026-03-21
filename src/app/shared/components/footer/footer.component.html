@@ -1,0 +1,22 @@
+<footer class="bg-gris-dark text-white/60 py-12 px-6">
+  <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+    <span class="font-serif text-white text-xl lowercase tracking-widest">gris en obra</span>
+
+    <div class="flex flex-col items-center md:items-end gap-1 text-sm">
+      @if (contact()?.instagram) {
+        <a [href]="'https://instagram.com/' + contact()!.instagram.replace('@','')"
+           target="_blank" rel="noopener"
+           class="hover:text-gris-accent transition-colors">
+          {{ contact()!.instagram }}
+        </a>
+      }
+      @if (contact()?.email) {
+        <a [href]="'mailto:' + contact()!.email"
+           class="hover:text-gris-accent transition-colors">
+          {{ contact()!.email }}
+        </a>
+      }
+    </div>
+  </div>
+  <p class="text-center text-xs text-white/30 mt-8">© {{ year }} Gris en Obra. Todos los derechos reservados.</p>
+</footer>

@@ -1,0 +1,139 @@
+<div class="flex gap-6 h-full">
+
+  <!-- ── LEFT PANEL: inbox list ── -->
+  <div class="flex flex-col w-80 shrink-0">
+
+    <!-- Header + filter tabs -->
+    <div class="mb-5">
+      <h1 class="text-xs uppercase tracking-[0.4em] text-gris-dark/40 mb-5">Consultas</h1>
+      <div class="flex gap-1">
+        @for (tab of filterTabs; track tab.key) {
+          <button (click)="filter.set(tab.key)"
+                  class="px-3 py-1.5 text-[10px] uppercase tracking-widest transition-colors rounded-sm"
+                  [style.background]="filter() === tab.key ? '#1A1A1A' : 'rgba(26,26,26,0.06)'"
+                  [style.color]="filter() === tab.key ? '#fff' : 'rgba(26,26,26,0.6)'">
+            {{ tab.label }}
+            <span class="ml-1 opacity-50">{{ counts()[tab.key] }}</span>
+          </button>
+        }
+      </div>
+    </div>
+
+    <!-- List -->
+    @if (loading()) {
+      <p class="text-xs text-gris-dark/30 tracking-widest">Cargando...</p>
+    } @else if (filtered().length === 0) {
+      <p class="text-xs text-gris-dark/30 tracking-widest mt-4">Sin consultas.</p>
+    } @else {
+      <div class="flex flex-col gap-2 overflow-y-auto">
+        @for (sub of filtered(); track sub.id) {
+          <button (click)="open(sub)"
+                  class="text-left p-4 rounded-sm transition-all border"
+                  [style.background]="selected()?.id === sub.id ? 'rgba(197,160,89,0.08)' : 'rgba(26,26,26,0.03)'"
+                  [style.border-color]="selected()?.id === sub.id ? 'rgba(197,160,89,0.40)' : 'rgba(26,26,26,0.08)'">
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-xs font-medium text-gris-dark truncate max-w-[140px]">{{ sub.name }}</span>
+              <!-- Status pill -->
+              <span class="text-[9px] uppercase tracking-widest px-2 py-0.5 rounded-full"
+                    [style.background]="sub.status === 'abierto' ? 'rgba(197,160,89,0.15)' : 'rgba(26,26,26,0.08)'"
+                    [style.color]="sub.status === 'abierto' ? '#C5A059' : 'rgba(26,26,26,0.35)'">
+                {{ sub.status }}
+              </span>
+            </div>
+            <p class="text-[10px] text-gris-dark/40 truncate mb-1">{{ sub.email }}</p>
+            <p class="text-[10px] text-gris-dark/50 line-clamp-2 leading-relaxed">{{ sub.message }}</p>
+            <p class="text-[9px] text-gris-dark/25 mt-2">{{ formatDate(sub.createdAt) }}</p>
+          </button>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- ── RIGHT PANEL: detail + reply ── -->
+  <div class="flex-1 min-w-0">
+    @if (!selected()) {
+      <div class="h-full flex items-center justify-center">
+        <p class="text-xs uppercase tracking-[0.4em] text-gris-dark/20">Selecciona una consulta</p>
+      </div>
+    } @else {
+      <div class="flex flex-col gap-6 max-w-2xl">
+
+        <!-- Contact header -->
+        <div class="flex items-start justify-between">
+          <div>
+            <h2 class="font-serif text-2xl text-gris-dark mb-1">{{ selected()!.name }}</h2>
+            <p class="text-xs text-gris-dark/40 tracking-widest">{{ selected()!.email }}</p>
+            <p class="text-[10px] text-gris-dark/25 mt-1">{{ formatDate(selected()!.createdAt) }}</p>
+          </div>
+          <span class="text-[10px] uppercase tracking-widest px-3 py-1.5 rounded-full"
+                [style.background]="selected()!.status === 'abierto' ? 'rgba(197,160,89,0.15)' : 'rgba(26,26,26,0.08)'"
+                [style.color]="selected()!.status === 'abierto' ? '#C5A059' : 'rgba(26,26,26,0.35)'">
+            {{ selected()!.status }}
+          </span>
+        </div>
+
+        <!-- Original message -->
+        <div class="p-5 rounded-sm" style="background: rgba(26,26,26,0.04); border: 1px solid rgba(26,26,26,0.07);">
+          <p class="text-[10px] uppercase tracking-widest text-gris-dark/30 mb-3">Mensaje</p>
+          <p class="text-sm text-gris-dark/80 leading-relaxed whitespace-pre-wrap">{{ selected()!.message }}</p>
+        </div>
+
+        <!-- Previous reply (if closed) -->
+        @if (selected()!.reply) {
+          <div class="p-5 rounded-sm" style="background: rgba(197,160,89,0.06); border: 1px solid rgba(197,160,89,0.20);">
+            <p class="text-[10px] uppercase tracking-widest text-gris-accent mb-3">Respuesta enviada</p>
+            <p class="text-sm text-gris-dark/70 leading-relaxed whitespace-pre-wrap">{{ selected()!.reply }}</p>
+            @if (selected()!.repliedAt) {
+              <p class="text-[9px] text-gris-dark/25 mt-3">{{ formatDate(selected()!.repliedAt!) }}</p>
+            }
+          </div>
+        }
+
+        <!-- Feedback messages -->
+        @if (success()) {
+          <p class="text-xs text-gris-accent tracking-widest">{{ success() }}</p>
+        }
+        @if (error()) {
+          <p class="text-xs text-red-500 tracking-widest">{{ error() }}</p>
+        }
+
+        <!-- Reply area (only if abierto, or allow re-reply) -->
+        <div class="flex flex-col gap-3">
+          <p class="text-[10px] uppercase tracking-widest text-gris-dark/30">
+            {{ selected()!.reply ? 'Enviar nueva respuesta' : 'Responder' }}
+          </p>
+          <textarea
+            rows="5"
+            placeholder="Escribe tu respuesta..."
+            [ngModel]="replyText()"
+            (ngModelChange)="replyText.set($event)"
+            name="reply"
+            class="w-full bg-transparent border border-gris-dark/15 rounded-sm p-4 text-sm text-gris-dark focus:outline-none focus:border-gris-accent transition-colors resize-none placeholder:text-gris-dark/25"
+          ></textarea>
+
+          <div class="flex items-center gap-4">
+            <button (click)="sendReply()"
+                    [disabled]="sending() || !replyText().trim()"
+                    class="bg-gris-dark text-white px-8 py-3 text-xs uppercase tracking-widest hover:bg-gris-accent transition-colors disabled:opacity-40">
+              {{ sending() ? 'Enviando...' : 'Enviar respuesta' }}
+            </button>
+
+            @if (selected()!.status === 'cerrado') {
+              <button (click)="reopen()"
+                      class="px-6 py-3 text-xs uppercase tracking-widest text-gris-dark/40 hover:text-gris-dark transition-colors border border-gris-dark/15 hover:border-gris-dark/30 rounded-sm">
+                Reabrir
+              </button>
+            }
+
+            <button (click)="close()"
+                    class="text-xs uppercase tracking-widest text-gris-dark/25 hover:text-gris-dark/50 transition-colors ml-auto">
+              Cerrar ✕
+            </button>
+          </div>
+        </div>
+
+      </div>
+    }
+  </div>
+
+</div>

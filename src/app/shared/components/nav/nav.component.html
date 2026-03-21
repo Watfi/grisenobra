@@ -1,0 +1,60 @@
+<nav class="fixed top-0 w-full z-50 px-6 py-6 flex justify-between items-center mix-blend-difference text-white">
+
+  <!-- Left: Hamburger button -->
+  <button (click)="toggleMenu()" aria-label="Abrir menú" class="flex flex-col gap-1.5 group cursor-pointer">
+    <span class="block w-6 h-px bg-current transition-all duration-300" [class.rotate-45]="menuOpen()"
+      [class.translate-y-2]="menuOpen()"></span>
+    <span class="block w-4 h-px bg-current transition-all duration-300" [class.opacity-0]="menuOpen()"
+      [class.w-6]="menuOpen()"></span>
+    <span class="block w-6 h-px bg-current transition-all duration-300" [class.-rotate-45]="menuOpen()"
+      [class.-translate-y-2]="menuOpen()"></span>
+  </button>
+
+  <!-- Right: Logo -->
+  <a routerLink="/" class="font-serif tracking-widest font-bold flex items-center gap-3 lowercase text-3xl md:text-4xl">
+    <span>gris</span>
+    <span class="inline-flex flex-col items-center justify-center text-[0.5em] tracking-normal" style="line-height: 0;">
+      <span style="padding-bottom: 0.25em; line-height: 1;">e</span>
+      <span class="w-full h-px bg-current block"></span>
+      <span style="padding-top: 0.08em; line-height: 1;">n</span>
+    </span>
+    <span>obra</span>
+  </a>
+
+</nav>
+
+<!-- Full-screen glassmorphism overlay -->
+@if (menuOpen()) {
+<div class="fixed inset-0 z-40 flex flex-col justify-center px-10 md:px-20"
+  style="background: rgba(15,15,15,0.75); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);"
+  (click)="closeMenu()">
+
+  <!-- Links (stop propagation so clicking them doesn't close immediately) -->
+  <div class="flex flex-col gap-8" (click)="$event.stopPropagation()">
+    <button (click)="goTo()"
+      class="font-serif text-5xl md:text-7xl text-white/90 hover:text-gris-accent transition-colors duration-300 lowercase tracking-widest leading-none text-left">
+      inicio
+    </button>
+    <a routerLink="/proyectos" (click)="closeMenu()"
+      class="font-serif text-5xl md:text-7xl text-white/90 hover:text-gris-accent transition-colors duration-300 lowercase tracking-widest leading-none">
+      proyectos
+    </a>
+    <button (click)="goTo('filosofia')"
+      class="font-serif text-5xl md:text-7xl text-white/90 hover:text-gris-accent transition-colors duration-300 lowercase tracking-widest leading-none text-left">
+      filosofía
+    </button>
+    <button (click)="goTo('contacto')"
+      class="font-serif text-5xl md:text-7xl text-white/90 hover:text-gris-accent transition-colors duration-300 lowercase tracking-widest leading-none text-left">
+      contacto
+    </button>
+  </div>
+
+  <!-- Bottom: branding subtle -->
+  <p class="absolute bottom-10 left-10 md:left-20 text-[10px] uppercase tracking-[0.4em] text-white/20">
+    Gris en Obra · Medellín
+  </p>
+
+
+
+</div>
+}

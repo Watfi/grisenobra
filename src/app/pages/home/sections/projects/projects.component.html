@@ -1,0 +1,126 @@
+<section id="proyectos" class="bg-white py-24">
+  <!-- Section header -->
+  <div class="px-6 md:px-12 mb-16">
+    <p class="text-xs uppercase tracking-[0.4em] text-gris-accent mb-3">portfolio</p>
+    <h2 class="font-serif text-4xl md:text-5xl text-gris-dark">Proyectos Seleccionados</h2>
+    <p class="text-gris-dark/50 tracking-wider uppercase text-xs mt-2">Explora nuestra visión del espacio</p>
+  </div>
+
+  <!-- Masonry grid -->
+  @if (projects().length >= 3) {
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-4 px-4 md:px-6">
+
+      <!-- Project 1: large (8/12) -->
+      <div
+        class="md:col-span-8 group relative overflow-hidden cursor-pointer h-[60vw] md:h-[70vh]"
+        (click)="openProject(projects()[0])"
+      >
+        <img [src]="projects()[0].coverImage" [alt]="projects()[0].title"
+          class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+        <div class="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-500"></div>
+        <div class="absolute bottom-10 left-10 text-white">
+          <span class="text-xs uppercase tracking-widest mb-2 block text-gris-accent">{{ projects()[0].category }}</span>
+          <h4 class="font-serif text-3xl">{{ projects()[0].title }}</h4>
+        </div>
+      </div>
+
+      <!-- Project 2: small (4/12) -->
+      <div
+        class="md:col-span-4 group relative overflow-hidden cursor-pointer h-[60vw] md:h-[70vh]"
+        (click)="openProject(projects()[1])"
+      >
+        <img [src]="projects()[1].coverImage" [alt]="projects()[1].title"
+          class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+        <div class="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-500"></div>
+        <div class="absolute bottom-10 left-10 text-white">
+          <span class="text-xs uppercase tracking-widest mb-2 block text-gris-accent">{{ projects()[1].category }}</span>
+          <h4 class="font-serif text-3xl">{{ projects()[1].title }}</h4>
+        </div>
+      </div>
+
+      <!-- Project 3: full width (12/12) -->
+      <div
+        class="md:col-span-12 group relative overflow-hidden cursor-pointer h-[60vw] md:h-[80vh] mt-4"
+        (click)="openProject(projects()[2])"
+      >
+        <img [src]="projects()[2].coverImage" [alt]="projects()[2].title"
+          class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+        <div class="absolute inset-0 bg-black/10 group-hover:bg-black/30 transition-colors duration-500"></div>
+        <div class="absolute bottom-12 left-12 text-white">
+          <span class="text-xs uppercase tracking-widest mb-2 block text-gris-accent">{{ projects()[2].category }}</span>
+          <h4 class="font-serif text-4xl">{{ projects()[2].title }}</h4>
+        </div>
+      </div>
+
+    </div>
+  } @else {
+    <!-- Fallback grid for fewer than 3 projects -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-1 px-4">
+      @for (project of projects(); track project.id) {
+        <div class="group relative overflow-hidden cursor-pointer aspect-[3/4]" (click)="openProject(project)">
+          <img [src]="project.coverImage" [alt]="project.title"
+            class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+          <div class="absolute inset-0 bg-gris-dark/0 group-hover:bg-gris-dark/60 transition-all duration-500 flex items-end p-6">
+            <div class="translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 text-white">
+              <p class="text-xs lowercase tracking-widest text-gris-accent mb-1">{{ project.category }}</p>
+              <h3 class="font-serif text-xl">{{ project.title }}</h3>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</section>
+
+<!-- Fullscreen Project Modal -->
+@if (selectedProject()) {
+  <div
+    class="fixed inset-0 z-50 flex items-end"
+    (click)="closeModal()"
+  >
+    <!-- Background image -->
+    <div class="absolute inset-0 bg-gris-dark">
+      <img
+        [src]="selectedProject()!.coverImage"
+        [alt]="selectedProject()!.title"
+        class="w-full h-full object-cover opacity-80"
+      />
+      <div class="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-black/40"></div>
+    </div>
+
+    <!-- Close button -->
+    <button
+      class="absolute top-10 right-10 z-10 p-4 text-white hover:text-gris-accent transition-colors"
+      (click)="closeModal()"
+    >
+      <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+
+    <!-- Glass-morphism info card (bottom-left) -->
+    <div
+      class="relative z-10 m-6 md:m-12 max-w-xl p-8 glass-morphism rounded-sm text-gris-dark mb-12"
+      (click)="$event.stopPropagation()"
+    >
+      <h3 class="font-serif text-4xl md:text-5xl mb-4">{{ selectedProject()!.title }}</h3>
+      <p class="text-lg opacity-90 leading-relaxed mb-8">{{ selectedProject()!.description }}</p>
+
+      <!-- Metadata -->
+      <div class="grid grid-cols-3 gap-6 pt-6 border-t border-gris-dark/10">
+        <div class="flex flex-col space-y-1">
+          <span class="text-[10px] uppercase tracking-widest opacity-50">Ubicación</span>
+          <span class="text-xs font-medium uppercase tracking-wider">{{ selectedProject()!.location }}</span>
+        </div>
+        <div class="flex flex-col space-y-1">
+          <span class="text-[10px] uppercase tracking-widest opacity-50">Estudio</span>
+          <span class="text-xs font-medium uppercase tracking-wider">Gris en Obra</span>
+        </div>
+        <div class="flex flex-col space-y-1">
+          <span class="text-[10px] uppercase tracking-widest opacity-50">Año</span>
+          <span class="text-xs font-medium uppercase tracking-wider">{{ selectedProject()!.year }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+}
