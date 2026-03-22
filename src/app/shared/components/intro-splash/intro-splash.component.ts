@@ -84,8 +84,6 @@ import { isPlatformBrowser } from '@angular/common';
           </div>
         </div>
 
-        <!-- Vaporize canvas overlay -->
-        <canvas #vaporizeCanvas class="absolute inset-0 w-full h-full pointer-events-none z-20 opacity-0"></canvas>
       </div>
     }
   `,
@@ -100,7 +98,6 @@ export class IntroSplashComponent {
   @ViewChild('letterE') letterE!: ElementRef;
   @ViewChild('letterN') letterN!: ElementRef;
   @ViewChild('dividerLine') dividerLine!: ElementRef;
-  @ViewChild('vaporizeCanvas') vaporizeCanvas!: ElementRef<HTMLCanvasElement>;
   @ViewChild('strokeCircle') strokeCircle!: ElementRef;
   @ViewChild('strokeSvg') strokeSvg!: ElementRef;
   @ViewChild('circleFill') circleFill!: ElementRef;
@@ -143,7 +140,6 @@ export class IntroSplashComponent {
     const gpuHint = { willChange: 'transform, opacity' };
     gsap.set(this.circleContainer.nativeElement, gpuHint);
     gsap.set(this.splashContainer.nativeElement, gpuHint);
-    gsap.set(this.vaporizeCanvas.nativeElement, gpuHint);
 
     const tl = gsap.timeline();
 
@@ -215,131 +211,14 @@ export class IntroSplashComponent {
     tl.to(this.dividerLine.nativeElement, { backgroundColor: '#c5a059', duration: 0.5 }, 2.5);
     tl.to(this.dividerLine.nativeElement, { backgroundColor: '#d5d4cf', duration: 0.4 }, 3.0);
 
-    // 7. Vaporize effect: capture circle content into canvas particles, then disintegrate
-    tl.add(() => this.startVaporize(gsap, tl), 3.2);
-  }
-
-  private startVaporize(gsap: any, tl: any) {
-    const canvas = this.vaporizeCanvas.nativeElement;
-    const container = this.splashContainer.nativeElement;
-    const circle = this.circleContainer.nativeElement;
-    const rect = container.getBoundingClientRect();
-    const circleRect = circle.getBoundingClientRect();
-
-    canvas.width = rect.width;
-    canvas.height = rect.height;
-    const ctx = canvas.getContext('2d')!;
-
-    // Capture the circle area pixels using html2canvas-like approach:
-    // Instead, we'll create particles from the circle's bounding box
-    const cx = circleRect.left - rect.left + circleRect.width / 2;
-    const cy = circleRect.top - rect.top + circleRect.height / 2;
-    const radius = circleRect.width / 2;
-
-    // Create particles in the circle area
-    type VParticle = {
-      x: number; y: number; vx: number; vy: number;
-      opacity: number; size: number; color: string;
-      angle: number; speed: number; turbulence: number;
-    };
-    const particles: VParticle[] = [];
-    const step = 3;
-    for (let y = cy - radius; y < cy + radius; y += step) {
-      for (let x = cx - radius; x < cx + radius; x += step) {
-        const dx = x - cx, dy = y - cy;
-        if (dx * dx + dy * dy <= radius * radius) {
-          // Distance from center determines color (inner = lighter)
-          const dist = Math.sqrt(dx * dx + dy * dy) / radius;
-          const isText = dist < 0.7 && Math.random() > 0.6;
-          const color = isText
-            ? `rgba(213,212,207,${0.6 + Math.random() * 0.4})`
-            : `rgba(138,138,122,${0.4 + Math.random() * 0.5})`;
-
-          particles.push({
-            x, y, vx: 0, vy: 0,
-            opacity: 1,
-            size: 1.5 + Math.random() * 1.5,
-            color,
-            angle: Math.random() * Math.PI * 2,
-            speed: 1 + Math.random() * 3,
-            turbulence: Math.random() * 0.3,
-          });
-        }
-      }
-    }
-
-    // Show canvas, hide original circle
-    gsap.set(canvas, { opacity: 1 });
-    gsap.set(circle, { opacity: 0 });
-
-    // Animate particles
-    let progress = 0;
-    const duration = 1200; // ms
-    const startTime = performance.now();
-
-    const animate = (now: number) => {
-      const elapsed = now - startTime;
-      progress = Math.min(1, elapsed / duration);
-
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      let alive = false;
-      for (const p of particles) {
-        // Activate particle based on position (left-to-right wave)
-        const activateAt = ((p.x - (cx - radius)) / (radius * 2)) * 0.6;
-        if (progress < activateAt) {
-          // Still static
-          ctx.fillStyle = p.color;
-          ctx.fillRect(p.x, p.y, p.size, p.size);
-          alive = true;
-          continue;
-        }
-
-        const localProgress = (progress - activateAt) / (1 - activateAt);
-
-        if (p.vx === 0 && p.vy === 0) {
-          p.vx = Math.cos(p.angle) * p.speed;
-          p.vy = Math.sin(p.angle) * p.speed - 1.5; // bias upward
-        }
-
-        p.vx += (Math.random() - 0.5) * p.turbulence;
-        p.vy -= 0.05; // float up
-        p.x += p.vx;
-        p.y += p.vy;
-        p.opacity = Math.max(0, 1 - localProgress * 1.5);
-
-        if (p.opacity > 0.01) {
-          alive = true;
-          ctx.globalAlpha = p.opacity;
-          ctx.fillStyle = p.color;
-          ctx.fillRect(p.x, p.y, p.size * (1 - localProgress * 0.5), p.size * (1 - localProgress * 0.5));
-
-          // Subtle glow
-          if (p.opacity > 0.3) {
-            ctx.globalAlpha = p.opacity * 0.15;
-            ctx.beginPath();
-            ctx.arc(p.x, p.y, p.size * 3, 0, Math.PI * 2);
-            ctx.fill();
-          }
-        }
-      }
-      ctx.globalAlpha = 1;
-
-      if (alive && progress < 1) {
-        requestAnimationFrame(animate);
-      } else {
-        // Done — fade out splash
-        gsap.to(this.splashContainer.nativeElement, {
-          opacity: 0, duration: 0.3, ease: 'power2.in',
-          onComplete: () => {
-            try { sessionStorage.setItem('grisenobra-intro-played', '1'); } catch {}
-            this.visible.set(false);
-            this.animationDone.emit();
-          },
-        });
-      }
-    };
-
-    requestAnimationFrame(animate);
+    // 7. Fade out splash smoothly
+    tl.to(this.splashContainer.nativeElement, {
+      opacity: 0, duration: 0.8, ease: 'power2.inOut',
+      onComplete: () => {
+        try { sessionStorage.setItem('grisenobra-intro-played', '1'); } catch {}
+        this.visible.set(false);
+        this.animationDone.emit();
+      },
+    }, 3.4);
   }
 }
