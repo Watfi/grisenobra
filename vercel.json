@@ -1,10 +1,11 @@
 {
   "buildCommand": "npm run build",
-  "outputDirectory": "dist/grisenobra",
+  "installCommand": "npm ci",
+  "public": "dist/grisenobra/browser",
   "rewrites": [
     {
       "source": "/(.*)",
-      "destination": "/server.mjs"
+      "destination": "/server.js"
     }
   ]
 }
