@@ -26,7 +26,7 @@ export class NavComponent {
     } else {
       this.router.navigate(['/']).then(() => {
         // delay generoso para que Angular renderice y estabilice el layout
-        setTimeout(() => this.scrollToFragment(fragment), 400);
+        setTimeout(() => this.scrollToFragment(fragment), 650);
       });
     }
   }
@@ -38,13 +38,12 @@ export class NavComponent {
     }
     const el = document.getElementById(fragment);
     if (!el) return;
-    // offsetTop acumulado (por si el elemento está dentro de varios padres)
-    let top = 0;
-    let node: HTMLElement | null = el;
-    while (node) {
-      top += node.offsetTop;
-      node = node.offsetParent as HTMLElement | null;
-    }
+    
+    // Obtenemos la posición exacta del elemento respecto al documento
+    const rect = el.getBoundingClientRect();
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    const top = rect.top + scrollTop;
+    
     // restar altura del nav fijo (~80px)
     window.scrollTo({ top: Math.max(0, top - 80), behavior: 'smooth' });
   }
