@@ -3,15 +3,15 @@ import { RenderMode, ServerRoute } from '@angular/ssr';
 export const serverRoutes: ServerRoute[] = [
   {
     path: 'admin',
-    renderMode: RenderMode.Client,
+    renderMode: RenderMode.Server,
   },
   {
     path: 'admin/**',
-    renderMode: RenderMode.Client,
+    renderMode: RenderMode.Server,
   },
   {
     path: 'admin/login',
-    renderMode: RenderMode.Client,
+    renderMode: RenderMode.Server,
   },
   // Proyectos page fetches from Firebase — render on client
   {
