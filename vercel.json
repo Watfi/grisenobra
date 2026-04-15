@@ -1,7 +1,0 @@
-{
-  "routes": [
-    { "src": "/(assets|styles|main|runtime|polyfills|vendor|chunk-).*", "continue": true },
-    { "src": "/.*\\.(js|css|png|jpg|jpeg|gif|ico|svg|json|webmanifest)", "continue": true },
-    { "src": "/(.*)", "dest": "/index.html" }
-  ]
-}
