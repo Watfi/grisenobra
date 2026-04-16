@@ -71,85 +71,58 @@
     <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gris-accent/20 to-transparent"></div>
     <div class="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gris-accent/20 to-transparent"></div>
 
-    <!-- Top row: first 2 projects (6/12 each) -->
-    @if (projects().length >= 1) {
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-        @for (project of projects().slice(0, 2); track project.id; let i = $index) {
-          <!-- Outer frame: lift + glow + border on hover -->
+    <!-- Projects grid: 2 cols mobile, 3 cols desktop -->
+    @if (projects().length > 0) {
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+        @for (project of projects(); track project.id; let i = $index) {
+          <!-- Enhanced card with decorative elements -->
           <div class="group relative cursor-pointer card-reveal
                       border border-transparent
                       transition-all duration-500
-                      hover:-translate-y-2
-                      hover:border-[rgba(197,160,89,0.35)]"
-               [style.animation-delay]="i * 130 + 'ms'"
-               [style.box-shadow]="'0 4px 24px rgba(26,26,26,0.07), 0 1px 4px rgba(26,26,26,0.05)'"
+                      hover:-translate-y-3
+                      hover:border-[rgba(197,160,89,0.35)]
+                      overflow-hidden rounded-sm"
+               [style.animation-delay]="i * 80 + 'ms'"
+               [style.box-shadow]="'0 8px 32px rgba(26,26,26,0.12), 0 2px 8px rgba(26,26,26,0.08)'"
                (click)="openProject(project)"
-               (mouseenter)="$any($event.currentTarget).style.boxShadow='0 16px 48px rgba(197,160,89,0.22), 0 4px 16px rgba(26,26,26,0.10)'"
-               (mouseleave)="$any($event.currentTarget).style.boxShadow='0 4px 24px rgba(26,26,26,0.07), 0 1px 4px rgba(26,26,26,0.05)'">
+               (mouseenter)="$any($event.currentTarget).style.boxShadow='0 24px 56px rgba(197,160,89,0.25), 0 8px 24px rgba(26,26,26,0.15)'"
+               (mouseleave)="$any($event.currentTarget).style.boxShadow='0 8px 32px rgba(26,26,26,0.12), 0 2px 8px rgba(26,26,26,0.08)'">
 
-            <!-- Decorative corner brackets (visible on hover) -->
-            <span class="absolute -top-px -left-px w-7 h-7 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-400 pointer-events-none"
+            <!-- Decorative corner brackets (always visible, more prominent) -->
+            <span class="absolute -top-px -left-px w-6 h-6 z-10 opacity-40 group-hover:opacity-100 transition-opacity duration-400 pointer-events-none"
                   style="border-top: 1.5px solid #C5A059; border-left: 1.5px solid #C5A059;"></span>
-            <span class="absolute -top-px -right-px w-7 h-7 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-400 pointer-events-none"
+            <span class="absolute -top-px -right-px w-6 h-6 z-10 opacity-40 group-hover:opacity-100 transition-opacity duration-400 pointer-events-none"
                   style="border-top: 1.5px solid #C5A059; border-right: 1.5px solid #C5A059;"></span>
-            <span class="absolute -bottom-px -left-px w-7 h-7 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-400 pointer-events-none"
+            <span class="absolute -bottom-px -left-px w-6 h-6 z-10 opacity-40 group-hover:opacity-100 transition-opacity duration-400 pointer-events-none"
                   style="border-bottom: 1.5px solid #C5A059; border-left: 1.5px solid #C5A059;"></span>
-            <span class="absolute -bottom-px -right-px w-7 h-7 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-400 pointer-events-none"
+            <span class="absolute -bottom-px -right-px w-6 h-6 z-10 opacity-40 group-hover:opacity-100 transition-opacity duration-400 pointer-events-none"
                   style="border-bottom: 1.5px solid #C5A059; border-right: 1.5px solid #C5A059;"></span>
 
+            <!-- Top accent line (always visible) -->
+            <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gris-accent/30 to-transparent z-20 opacity-60 group-hover:opacity-100 transition-opacity duration-400"></div>
+
             <!-- Image container -->
-            <div class="relative overflow-hidden h-[55vw] md:h-[45vh]">
+            <div class="relative overflow-hidden h-[50vw] sm:h-[35vh] md:h-[30vh]">
               <img [src]="project.coverImage" [alt]="project.title"
-                   class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-              <div class="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-500"></div>
-              <div class="absolute bottom-6 left-6 right-6 p-5 rounded-sm text-white transition-all duration-400 group-hover:translate-y-[-4px]"
-                   style="background: rgba(15,15,15,0.50); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid rgba(255,255,255,0.10);">
-                <span class="text-[10px] uppercase tracking-widest mb-1.5 block text-gris-accent">{{ project.category }}</span>
-                <h3 class="font-serif text-2xl md:text-3xl leading-tight">{{ project.title }}</h3>
-                <p class="text-[11px] text-white/50 mt-2 uppercase tracking-widest">{{ project.location }} · {{ project.year }}</p>
+                   class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+              <div class="absolute inset-0 bg-black/15 group-hover:bg-black/35 transition-colors duration-500"></div>
+
+              <!-- Number indicator (top right) -->
+              <div class="absolute top-3 right-3 w-7 h-7 flex items-center justify-center text-xs font-light text-gris-accent"
+                   style="background: rgba(197,160,89,0.15); border: 1px solid rgba(197,160,89,0.3); border-radius: 2px;">
+                {{ String(i + 1).padStart(2, '0') }}
               </div>
             </div>
-          </div>
-        }
-      </div>
-    }
 
-    <!-- Remaining projects: 3 columns -->
-    @if (projects().length > 2) {
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        @for (project of projects().slice(2); track project.id; let i = $index) {
-          <div class="group relative cursor-pointer card-reveal
-                      border border-transparent
-                      transition-all duration-500
-                      hover:-translate-y-2
-                      hover:border-[rgba(197,160,89,0.35)]"
-               [style.animation-delay]="(2 + i) * 130 + 'ms'"
-               [style.box-shadow]="'0 4px 24px rgba(26,26,26,0.07), 0 1px 4px rgba(26,26,26,0.05)'"
-               (click)="openProject(project)"
-               (mouseenter)="$any($event.currentTarget).style.boxShadow='0 16px 48px rgba(197,160,89,0.22), 0 4px 16px rgba(26,26,26,0.10)'"
-               (mouseleave)="$any($event.currentTarget).style.boxShadow='0 4px 24px rgba(26,26,26,0.07), 0 1px 4px rgba(26,26,26,0.05)'">
+            <!-- Info section -->
+            <div class="relative p-4 md:p-5 bg-gradient-to-b from-[rgba(15,15,15,0.7)] to-[rgba(15,15,15,0.85)] border-t border-white/5"
+                 style="backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);">
+              <span class="text-[9px] uppercase tracking-widest mb-2 block text-gris-accent/80">{{ project.category }}</span>
+              <h3 class="font-serif text-base md:text-lg leading-tight text-white mb-2 group-hover:text-gris-accent transition-colors duration-300">{{ project.title }}</h3>
+              <p class="text-[9px] text-white/40 uppercase tracking-widest">{{ project.location }}{{ project.year ? ' · ' + project.year : '' }}</p>
 
-            <!-- Corner brackets -->
-            <span class="absolute -top-px -left-px w-5 h-5 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-400 pointer-events-none"
-                  style="border-top: 1.5px solid #C5A059; border-left: 1.5px solid #C5A059;"></span>
-            <span class="absolute -top-px -right-px w-5 h-5 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-400 pointer-events-none"
-                  style="border-top: 1.5px solid #C5A059; border-right: 1.5px solid #C5A059;"></span>
-            <span class="absolute -bottom-px -left-px w-5 h-5 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-400 pointer-events-none"
-                  style="border-bottom: 1.5px solid #C5A059; border-left: 1.5px solid #C5A059;"></span>
-            <span class="absolute -bottom-px -right-px w-5 h-5 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-400 pointer-events-none"
-                  style="border-bottom: 1.5px solid #C5A059; border-right: 1.5px solid #C5A059;"></span>
-
-            <!-- Image container -->
-            <div class="relative overflow-hidden h-[60vw] md:h-[40vh]">
-              <img [src]="project.coverImage" [alt]="project.title"
-                   class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-              <div class="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-500"></div>
-              <div class="absolute bottom-4 left-4 right-4 p-4 rounded-sm text-white transition-all duration-400 group-hover:translate-y-[-3px]"
-                   style="background: rgba(15,15,15,0.50); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid rgba(255,255,255,0.10);">
-                <span class="text-[10px] uppercase tracking-widest mb-1 block text-gris-accent">{{ project.category }}</span>
-                <h3 class="font-serif text-xl leading-tight">{{ project.title }}</h3>
-                <p class="text-[10px] text-white/50 mt-1.5 uppercase tracking-widest">{{ project.location }}</p>
-              </div>
+              <!-- Bottom accent -->
+              <div class="absolute bottom-0 left-4 right-4 h-px bg-gradient-to-r from-transparent via-gris-accent/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400"></div>
             </div>
           </div>
         }
