@@ -9,12 +9,41 @@
     <div class="absolute inset-0 bg-linear-to-t from-black/70 via-black/30 to-black/20"></div>
   </div>
 
-  <!-- Glassmorphism title card -->
+  <!-- Decorative lines above -->
+  <div class="absolute z-10 w-full top-20 md:top-24 px-8 md:px-14 pointer-events-none">
+    <div class="flex items-center gap-6">
+      <div class="flex-1 h-px bg-gradient-to-r from-transparent via-gris-accent/30 to-transparent"></div>
+    </div>
+  </div>
+
+  <!-- Glassmorphism title card with decorative elements -->
   <div class="relative z-10 m-8 md:m-14 p-8 md:p-10 rounded-sm"
        style="background: rgba(255,255,255,0.08); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); border: 1px solid rgba(255,255,255,0.12);">
+
+    <!-- Corner decorations -->
+    <div class="absolute -top-3 -left-3 w-4 h-4 border-t border-l border-gris-accent/50"></div>
+    <div class="absolute -top-3 -right-3 w-4 h-4 border-t border-r border-gris-accent/50"></div>
+    <div class="absolute -bottom-3 -left-3 w-4 h-4 border-b border-l border-gris-accent/50"></div>
+    <div class="absolute -bottom-3 -right-3 w-4 h-4 border-b border-r border-gris-accent/50"></div>
+
+    <!-- Vertical accent lines on sides (subtle) -->
+    <div class="absolute left-0 top-12 bottom-12 w-px bg-gradient-to-b from-transparent via-gris-accent/20 to-transparent -ml-6"></div>
+    <div class="absolute right-0 top-12 bottom-12 w-px bg-gradient-to-b from-transparent via-gris-accent/20 to-transparent -mr-6"></div>
+
     <p class="text-xs uppercase tracking-[0.4em] text-gris-accent mb-3">portfolio</p>
     <h1 class="font-serif text-4xl md:text-6xl text-white leading-tight">Todos los proyectos</h1>
-    <div class="mt-5 w-10 h-px bg-gris-accent"></div>
+    <div class="mt-5 flex items-center gap-4">
+      <div class="w-10 h-px bg-gris-accent"></div>
+      <div class="w-1 h-1 rounded-full bg-gris-accent/40"></div>
+      <div class="w-1.5 h-px bg-gris-accent/30"></div>
+    </div>
+  </div>
+
+  <!-- Decorative lines below -->
+  <div class="absolute z-10 w-full bottom-20 md:bottom-24 px-8 md:px-14 pointer-events-none">
+    <div class="flex items-center gap-6">
+      <div class="flex-1 h-px bg-gradient-to-r from-transparent via-gris-accent/30 to-transparent"></div>
+    </div>
   </div>
 </section>
 
@@ -37,6 +66,10 @@
          style="background: radial-gradient(circle, rgba(197,160,89,0.10) 0%, transparent 65%);"></div>
     <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] pointer-events-none"
          style="background: radial-gradient(ellipse, rgba(245,240,230,0.6) 0%, transparent 70%);"></div>
+
+    <!-- Decorative divider lines -->
+    <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gris-accent/20 to-transparent"></div>
+    <div class="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gris-accent/20 to-transparent"></div>
 
     <!-- Top row: first 2 projects (6/12 each) -->
     @if (projects().length >= 1) {
@@ -136,11 +169,18 @@
 
 <!-- Footer link -->
 @if (!loading()) {
-  <div class="py-16 px-6 flex justify-between items-center" style="background: linear-gradient(90deg, #EDE7DA 0%, #E6DDD0 50%, #EDE5D5 100%);">
+  <div class="relative py-16 px-6 flex justify-between items-center" style="background: linear-gradient(90deg, #EDE7DA 0%, #E6DDD0 50%, #EDE5D5 100%);">
+    <!-- Top border line -->
+    <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gris-accent/30 to-transparent"></div>
+
     <a routerLink="/" class="text-xs uppercase tracking-[0.3em] text-gris-dark/40 hover:text-gris-accent transition-colors">
       ← Volver al inicio
     </a>
-    <p class="text-[10px] uppercase tracking-widest text-gris-dark/20">Gris en Obra · Medellín</p>
+    <div class="flex items-center gap-3">
+      <div class="h-px w-3 bg-gris-accent/30"></div>
+      <p class="text-[10px] uppercase tracking-widest text-gris-dark/20">Gris en Obra · Medellín</p>
+      <div class="h-px w-3 bg-gris-accent/30"></div>
+    </div>
   </div>
 }
 
