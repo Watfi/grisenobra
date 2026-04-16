@@ -110,7 +110,7 @@
               <!-- Number indicator (top right) -->
               <div class="absolute top-3 right-3 w-7 h-7 flex items-center justify-center text-xs font-light text-gris-accent"
                    style="background: rgba(197,160,89,0.15); border: 1px solid rgba(197,160,89,0.3); border-radius: 2px;">
-                {{ String(i + 1).padStart(2, '0') }}
+                {{ (i + 1) < 10 ? '0' + (i + 1) : '' + (i + 1) }}
               </div>
             </div>
 
